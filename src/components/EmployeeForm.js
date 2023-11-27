@@ -1,27 +1,17 @@
 import React from "react";
-import { useState } from "react";
+import { useState , useRef} from "react";
 import "../styles/EmployeeForm.css";
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
+
 
 // import { saveDataToLocalStorage } from "../utils/localStorage";
 import swal from "sweetalert";
+import defaultImage from "../assests/user.png"
 
 function EmployeeForm({ onUpdate }) {
-  //Usestates for toasty
 
-  // const [successMessage, setSuccessMessage] = useState("");
-  // const [errorMessage, setErrorMessage] = useState("");
-
-  //Use state for form Data
-
-  // const [formData, setFormData] = useState({
-  //   name: "",
-  //   surname: "",
-  //   idnumber: "",
-  //   email: "",
-  //   employeePositon: "",
-  //   phoneNumber: "",
-  //   image: "",
-  // });
 
   //INDIVIDUAL STATES FOR ALL FIELDS
   const [name, setName] = useState("");
@@ -32,35 +22,32 @@ function EmployeeForm({ onUpdate }) {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [image, setImage] = useState(null);
   const [imagePreview, setImagePreview] = useState("");
+  const fileInputRef = useRef(null);
+
+
+  const handleClick = () => {
+   fileInputRef.current.click(); // Trigger the file input click event
+  };
+
 
  
 
-  //FUNCTION TO HANDLE CHANGE
-  // const handleChange = (e) => {
-  //   const { name, value } = e.target;
-  //   setFormData((prevData) => ({
-  //     ...prevData,
-  //     [name]: value,
-  //   }));
-
-  // };
-
   //HANDLE IMAGE CHANGE
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
+  // const handleImageChange = (e) => {
+  //   const file = e.target.files[0];
 
-    //update imgae state
-    setImage(file);
+  //   //update imgae state
+  //   setImage(file);
 
-    //Preview the image
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
+  //   //Preview the image
+  //   if (file) {
+  //     const reader = new FileReader();
+  //     reader.onloadend = () => {
+  //       setImagePreview(reader.result);
+  //     };
+  //     reader.readAsDataURL(file);
+  //   }
+  // };
 
   //Function to handle form submission (add/update  employee)
   const handleSubmit = (e) => {
@@ -156,6 +143,35 @@ function EmployeeForm({ onUpdate }) {
   return (
     <div className="container">
       <form onSubmit={handleSubmit}>
+
+      <label htmlFor="image" className="image-upload">
+
+      <img
+      src={image ? URL.createObjectURL(image): defaultImage}
+      alt="Selected"
+      className="preview-image"
+      />
+       <input
+          type="file" //type for adding images , the type attribute allows for that
+          id="img"
+          name="img"
+          accept="image/*" //field to only accept images
+          required
+          // value={image}
+          ref={fileInputRef} //reference to the file input
+          style={{display: 'none'}}
+          onChange={(e)=>setImage(e.target.files[0])}
+
+        />
+      <span className="upload-icon" onClick={handleClick}>
+      <FontAwesomeIcon icon={faPlus} /> 
+
+      </span>
+      </label>
+
+       
+       
+
         <label htmlFor="name"> Employee Name</label>
         <input
           type="text"
@@ -212,29 +228,12 @@ function EmployeeForm({ onUpdate }) {
           id="phonenumber"
           name="phonenumber"
           placeholder="071 459 8679"
-          // required
+          required
           value={phoneNumber}
           onChange={(e)=>setPhoneNumber(e.target.value)}
           // onChange={handleInputChange}
         />
-        <label htmlFor="image">Employee Image:</label>
-        <input
-          type="file" //type for adding images , the type attribute allows for that
-          id="img"
-          name="img"
-          accept="image/*" //field to only accept images
-          value={image}
-          // onChange={handleImageChange}
-          onChange={(e)=>setImage(e.target.files)}
-        />
-        {imagePreview && (
-          <img
-            src={imagePreview}
-            alt="Preview"
-            style={{ maxWidth: "100%", maxHeight: "200px" }}
-          />
-        )}
-
+       
         <button type="submit">Submit</button>
       </form>
     </div>

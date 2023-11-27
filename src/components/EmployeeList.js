@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from "react";
 
-import Paper from "@mui/material/Paper";
-import Button from "@mui/material/Button";
-
 import {
   getDataFromLocalStorage,
   saveDataToLocalStorage,
@@ -10,48 +7,50 @@ import {
 
 function EmployeeList() {
   //Use state for storing employee data
-  const [employees, setEmployess] = useState([ ]);
+  const [employees, setEmployees] = useState([ ]);
+  console.log(employees)
 
   //use Effect to load data from local  storage
   useEffect(() => {
     const storedEmployees = getDataFromLocalStorage("Employees");
+    console.log(storedEmployees)
     if (storedEmployees) {
-      setEmployess(storedEmployees);
+      setEmployees(storedEmployees);
     }
     //Load data from local storage
   }, []);
 
+
   //function to handle employee deletion
-  const deleteEmployee = (employeeId) => {
+  const deleteEmployee = (id) => {
     console.log("Delete employee btn clicked ");
     const updatedEmployees = employees.filter(
-      (employee) => employee.id !== employee.id
+      (employee) => employee.id !== id
     );
-    setEmployess(updatedEmployees);
+    setEmployees(updatedEmployees);
     saveDataToLocalStorage("Employees", updatedEmployees);
     //Delete employee from local storage
   };
 
   return (
-    <Paper>
+    <div>
       <h2> Employee List  </h2>
 
-      <ul>
+      <ol>
       {employees.map((employee) => (
         <li key={employee.id}>
-          {employee.name} -{" "}
+          Employee Name :{employee.name} 
+          Position : {employee.employeePosition}{" "}
       
-
-
-          <Button onClick={() => deleteEmployee(employee.id)}>Delete</Button>
+          <button onClick={() => deleteEmployee(employee.id)}>Delete</button>
         </li>
 
         ))}
 
-      </ul>
+      </ol>
       
      
-    </Paper>
+    </div>
   
   );
 }

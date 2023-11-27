@@ -30,9 +30,51 @@
     /* cursor: pointer; */
   } 
   
-  /* button:hover {
-    background-color: rgb(2, 70, 6);
-    border-radius: 15px;
-    width: 30px;
+ 
+  /* image field*/
+   .image-upload {
+    position: relative;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    overflow: hidden;
+    display: inline-block;
   }
-   */
+  .image-upload input[type='file'] {
+    display: none;
+  }
+
+  .preview-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .upload-icon {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    background-color: #fff;
+    padding: 3px 6px;
+    border-radius: 7px;
+    cursor: pointer;
+  }
+  
+
+  /* TABLET LANSCAPE AND LARGER SCREENS */
+  @media  only screen and  (min-width : 768px){
+    .image-upload{
+      width: 150px;
+      height: 150px;
+    }
+  }
+
+  /* Desktop and larger screens */
+  @media only screen and (min-width: 1024px){
+    .image-upload{
+      width: 200px;
+      height: 200px;
+    }
+  }
+    
+  
