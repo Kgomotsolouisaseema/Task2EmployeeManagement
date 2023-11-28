@@ -1,18 +1,15 @@
 import React from "react";
-import { useState , useRef} from "react";
+import { useState, useRef } from "react";
 import "../styles/EmployeeForm.css";
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
-
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
 
 // import { saveDataToLocalStorage } from "../utils/localStorage";
 import swal from "sweetalert";
-import defaultImage from "../assests/user.png"
+import defaultImage from "../assests/user.png";
 
 function EmployeeForm({ onUpdate }) {
-
-
   //INDIVIDUAL STATES FOR ALL FIELDS
   const [name, setName] = useState("");
   const [surname, setSurname] = useState("");
@@ -24,13 +21,9 @@ function EmployeeForm({ onUpdate }) {
   const [imagePreview, setImagePreview] = useState("");
   const fileInputRef = useRef(null);
 
-
   const handleClick = () => {
-   fileInputRef.current.click(); // Trigger the file input click event
+    fileInputRef.current.click(); // Trigger the file input click event
   };
-
-
- 
 
   //HANDLE IMAGE CHANGE
   // const handleImageChange = (e) => {
@@ -52,29 +45,40 @@ function EmployeeForm({ onUpdate }) {
   //Function to handle form submission (add/update  employee)
   const handleSubmit = (e) => {
     e.preventDefault();
-    const newEmployee = {
-      id: idNumber, //unique identifier
-      name,
-      surname,
-      idNumber,
-      email,
-      employeePosition,
-      phoneNumber,
-      image,
-    };
+
+    // Check if any required fields are empty
+    if (
+      !name ||
+      !surname ||
+      !idNumber ||
+      !email ||
+      !employeePosition ||
+      !phoneNumber ||
+      !image
+    ) {
+      // Notify the user about the missing fields
+      swal("Please fill in all required fields, including the image!");
+      return;
+    }
+
+    //convert the input valuesto uppercase
+    const uppercaseName = name.toUpperCase();
+    const uppercaseSurname = surname.toUpperCase();
+    const uppercaseEmail = email.toUpperCase();
+    const uppercaseEmployeePosition = employeePosition.toUpperCase();
 
     try {
       const newEmployee = {
         id: idNumber, //unique identifier
-        name,
-        surname,
+        name: uppercaseName,
+        surname: uppercaseSurname,
         idNumber,
-        email,
-        employeePosition,
+        email: uppercaseEmail,
+        employeePosition: uppercaseEmployeePosition,
         phoneNumber,
         image,
       };
-      console.log(newEmployee)
+      console.log(newEmployee);
       //get employees from local storage
       const storedEmployees =
         JSON.parse(localStorage.getItem("Employees")) || [];
@@ -110,7 +114,7 @@ function EmployeeForm({ onUpdate }) {
     }
   };
 
-   //HANDLE INPUT CHANGE FUNCTION , THIS DYNAMICALLY CHANGES THE STATE OF THE FIELD BASED ON THE VALUE OF THE SET INPUT
+  //HANDLE INPUT CHANGE FUNCTION , THIS DYNAMICALLY CHANGES THE STATE OF THE FIELD BASED ON THE VALUE OF THE SET INPUT
   // const handleInputChange = (e) => {
   //   const { name, value } = e.target;
   //   if (name === "phoneNumber") {
@@ -143,34 +147,27 @@ function EmployeeForm({ onUpdate }) {
   return (
     <div className="container">
       <form onSubmit={handleSubmit}>
-
-      <label htmlFor="image" className="image-upload">
-
-      <img
-      src={image ? URL.createObjectURL(image): defaultImage}
-      alt="Selected"
-      className="preview-image"
-      />
-       <input
-          type="file" //type for adding images , the type attribute allows for that
-          id="img"
-          name="img"
-          accept="image/*" //field to only accept images
-          required
-          // value={image}
-          ref={fileInputRef} //reference to the file input
-          style={{display: 'none'}}
-          onChange={(e)=>setImage(e.target.files[0])}
-
-        />
-      <span className="upload-icon" onClick={handleClick}>
-      <FontAwesomeIcon icon={faPlus} /> 
-
-      </span>
-      </label>
-
-       
-       
+        <label htmlFor="image" className="image-upload">
+          <img
+            src={image ? URL.createObjectURL(image) : defaultImage}
+            alt="Selected"
+            className="preview-image"
+          />
+          <input
+            type="file" //type for adding images , the type attribute allows for that
+            id="img"
+            name="img"
+            accept="image/*" //field to only accept images
+            // required
+            // value={image}
+            ref={fileInputRef} //reference to the file input
+            style={{ display: "none" }}
+            onChange={(e) => setImage(e.target.files[0])}
+          />
+          <span className="upload-icon" onClick={handleClick}>
+            <FontAwesomeIcon icon={faPlus} />
+          </span>
+        </label>
 
         <label htmlFor="name"> Employee Name</label>
         <input
@@ -179,7 +176,7 @@ function EmployeeForm({ onUpdate }) {
           name="name"
           required
           value={name}
-          onChange={(e)=>setName(e.target.value)}
+          onChange={(e) => setName(e.target.value)}
         />
         <label htmlFor="surname">Employee Surname:</label>
         <input
@@ -188,7 +185,7 @@ function EmployeeForm({ onUpdate }) {
           name="surname"
           required
           value={surname}
-          onChange={(e)=>setSurname(e.target.value)}
+          onChange={(e) => setSurname(e.target.value)}
           // onChange={handleInputChange}
         />
         <label htmlFor="idnumber">Employee ID Number :</label>
@@ -198,7 +195,7 @@ function EmployeeForm({ onUpdate }) {
           name="Idnumber"
           required
           value={idNumber}
-          onChange={(e)=>setIdNumber(e.target.value)}
+          onChange={(e) => setIdNumber(e.target.value)}
           // onChange={handleInputChange}
         />
         <label htmlFor="email">Employee Email :</label>
@@ -208,7 +205,7 @@ function EmployeeForm({ onUpdate }) {
           name="email"
           required
           value={email}
-          onChange={(e)=>setEmail(e.target.value)}
+          onChange={(e) => setEmail(e.target.value)}
           // onChange={handleInputChange}
         />
         <label htmlFor="position">Employee Positon :</label>
@@ -218,10 +215,10 @@ function EmployeeForm({ onUpdate }) {
           name="position"
           required
           value={employeePosition}
-          onChange={(e)=>setEmployeePosition(e.target.value)}
+          onChange={(e) => setEmployeePosition(e.target.value)}
           // onChange={handleInputChange}
         />
-      
+
         <label htmlFor="phonenumber">Employee Phone Number:</label>
         <input
           type="tel"
@@ -230,10 +227,10 @@ function EmployeeForm({ onUpdate }) {
           placeholder="071 459 8679"
           required
           value={phoneNumber}
-          onChange={(e)=>setPhoneNumber(e.target.value)}
+          onChange={(e) => setPhoneNumber(e.target.value)}
           // onChange={handleInputChange}
         />
-       
+
         <button type="submit">Submit</button>
       </form>
     </div>

@@ -10,14 +10,14 @@ import React, { useState } from 'react';
 function App() {
   
 
-  const [employees, setEmployees] = useState([ ]);
+  const [allEmployees, setAllEmployees] = useState([ ]);
 
   const handleUpdate = (updatedEmployees)=>{
-    setEmployees(updatedEmployees);
+    setAllEmployees(updatedEmployees);
   };
 
   const handleSearch = (filteredEmployees)=>{
-    setEmployees(filteredEmployees)
+    setAllEmployees(filteredEmployees)
   }
   
 
@@ -25,9 +25,9 @@ function App() {
   return (
     <div className="App">
      <EmployeeForm onUpdate={handleUpdate}/>
-     <EmployeeList employees={employees}/>
-     <EmployeeSearch employees={employees} onSearch={handleSearch} />
-     <EmployeeSeach/>
+     <EmployeeList setAllEmployees={setAllEmployees}/>
+     <EmployeeSearch employees={allEmployees} onSearch={handleSearch} />
+    
 
     </div>
   );

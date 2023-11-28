@@ -1,43 +1,92 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from "react";
+import "../styles/EmployeeSearch.css";
+import swal from "sweetalert";
 
-function EmployeeSeach({ employees = [], onSearch }) {
-  const [searchQuery, setSearchQuery] = useState('');
-  console.log("what is at search " ,searchQuery )
-  const [selectedEmployee ,setSelectedEmployee]= useState(null)
+function EmployeeSeach({ employees }) {
+  console.log("employees", employees);
 
-  // const handleSearch = () => {
-  //   // Filter employees based on the search query
-  //   const filteredEmployees = employees.filter((employee) =>
-  //     employee.idNumber.includes(searchQuery)
-  //   );
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedEmployee, setSelectedEmployee] = useState([]);
 
-  //   // Call the onSearch callback with the filtered employees
-  //   onSearch && onSearch(filteredEmployees);
-  // };
+  //states for updating empoyees details
+  const [updatedName, setUpdatedName] = useState("");
+  const [updatedSurname, setUpdatedSurname] = useState("");
+  const [updatedPosition, setUpdatedPosition] = useState("");
+  const [isEditing, setisEditing] = useState(false);
+  const [editedEmployee, setEditedEmployee] = useState({});
+  const [updatedEmployee, setUpdatedEmployee] = useState({});
 
-  const handleSearch = () =>{
-    console.log("search btn clicked")
-    //Does employees have data it in before we filter by id 
-    if (!Array.isArray(employees)){
-      console.error("Employees array is not empty");
-      return;
-    }
-    const filteredEmployees = employees.filter((employee)=>
-    employee.idNumber.includes(searchQuery)
+
+  useEffect(() => {
+    console.log("Recieved employees:", employees);
+    // setSelectedEmployee(employees);
+  }, [employees]);
+
+  const handleSearch = () => {
+    //Does employees have data it in before we filter by id
+    // if (!Array.isArray(employees)){
+    //   return;
+    // }
+    const filteredEmployees = employees.filter((employees) =>
+      employees.idNumber.includes(searchQuery)
     );
-    onSearch && onSearch(filteredEmployees);
+    // onSearch && onSearch(filteredEmployees);
+    setSelectedEmployee(filteredEmployees);
   };
 
-  //handle employee search 
-  const handleEmployeeSelect = (employee) =>{
-    console.log("hand;e employee select btn clicked ")
-    setSelectedEmployee(employee)
+  //handle employee search
+  const handleEmployeeSelect = (employee) => {
+    console.log("handle employee select btn clicked ");
+    setSelectedEmployee(employee);
+    setEditedEmployee({ ...employee });
+    setisEditing(true); //open edit input
+  };
 
+  const handleUpdate = async (id, employees) => {
+    
+    try {
+      let people = localStorage.getItem("Employees");
+      console.log("update btn clicked");
+      //get existing items from local storage first
+
+      //parse the current data or initialize a new array
+      people = people ? JSON.parse(people) : [];
+
+      // Create an object for the updated employee
+      let  updatedEmployee = {
+        id: id, 
+        name: updatedName, 
+        surname: updatedSurname, 
+        employeePosition: updatedPosition, 
+       
+      };
+
+      //find the item by ID AND UPDATE IT
+      const updatedPeople = people.map((person) => {
+        if (person.id === id) {
+          // return { ...person, ...updatedEmployee };
+          const updatedPerson = {...person , ...employees}
+          setUpdatedEmployee(updatedPerson)
+          return updatedPerson;
+        }
+        return person;
+      });
+      // update the local storage with the modified data
+      localStorage.setItem("Employees", JSON.stringify(updatedPeople));
+    } catch (error) {
+      console.error("Error updating employee", error);
+      swal("Error Updating Employee");
+    }
+  };
+
+  //handle input field change
+  const handleInputChange = () => {
+    console.log("handle input change btn clicked");
   };
 
   return (
-    <div className="employee-search-container">
-        <h2> Employee Search </h2>
+    <div className="container">
+      <h2> Employee Search </h2>
 
       <input
         type="text"
@@ -47,46 +96,78 @@ function EmployeeSeach({ employees = [], onSearch }) {
       />
       <button onClick={handleSearch}>Search</button>
 
-      <ol>
-      {employees.map((employee) => (
-        <li key={employee.id}>
-          Employee Name :{employee.name} 
-          Position : {employee.employeePosition}{" "}
-          <button onClick={() => handleEmployeeSelect(employee)}>Select</button>
-        </li>
-
-        ))}
-
+      {/*Display selected employee details for update/delete*/}
+      <ol className="list" style={{ padding: 0, textAlign: "justify" }}>
+        {selectedEmployee &&
+          Array.isArray(selectedEmployee) &&
+          selectedEmployee.map((employees) => (
+            <li key={employees.id} className="employee-item">
+              <div className="displaybox">
+                <span className="employee-name">
+                  {" "}
+                  Employee Name : {employees.name}{" "}
+                </span>
+                <br />
+                <span className="employee-name">
+                  {" "}
+                  Employee Surname : {employees.surname}{" "}
+                </span>
+                <br />
+                <span className="employee-name">
+                  {" "}
+                  Employee Name : {employees.idNumber}{" "}
+                </span>
+                <br />
+                <span className="employee-name">
+                  {" "}
+                  Employee Name : {employees.employeePosition}{" "}
+                </span>
+                <br />
+              </div>
+              <button
+                className="editbtn"
+                onClick={(employee) => handleEmployeeSelect(employee)}
+              >
+                EDIT
+              </button>
+            </li>
+          ))}
       </ol>
-      {/*Display selected employee details for update/delete*/ }
-      {selectedEmployee && (
+
+      {/*Editing UI */}
+      {isEditing && (
         <div>
-          <h3>{selectedEmployee.name}</h3>
-          <p> ID: {selectedEmployee.idNumber}</p>
+          <h3>Editing Employee Details </h3>
+          <input
+            type="text"
+            name="name"
+            placeholder="NAME"
+            value={editedEmployee.name}
+            // onChange={handleInputChange}
+            onChange={(e) => setUpdatedName(e.target.value)}
+          />
+          <input
+            type="text"
+            name="surname"
+            placeholder="SURNAME"
+            value={editedEmployee.surname}
+            // onChange={handleInputChange}
+            onChange={(e) => setUpdatedSurname(e.target.value)}
+          />
+          <input
+            type="text"
+            name="position"
+            placeholder="POSITION"
+            value={editedEmployee.employeePosition}
+            // onChange={handleInputChange}
+            onChange={(e) => setUpdatedPosition(e.target.value)}
+          />
 
-          {/* <label htmlFor="name"> Employee Name :</label>
-        <input
-          type="text"
-          label="Name"
-          name="name"
-          required
-          // onChange={(e)=>setName(e.target.value)}
-        />
-         <label htmlFor="name"> Employee ID Number:</label>
-        <input
-          type="number"
-          label="ID number"
-          name="num"
-          required
-          // onChange={(e)=>setName(e.target.value)}
-        /> */}
-
+          <button onClick={() => handleUpdate(selectedEmployee.id , updatedEmployee )}>
+            UPDATE
+          </button>
         </div>
-
-
       )}
-
-
     </div>
   );
 }

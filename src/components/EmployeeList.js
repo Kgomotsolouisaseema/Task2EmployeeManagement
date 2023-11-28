@@ -1,14 +1,19 @@
 import React, { useEffect, useState } from "react";
+import '../styles/EmployeeList.css';
 
 import {
   getDataFromLocalStorage,
   saveDataToLocalStorage,
 } from "../utils/localStorage";
+import swal from "sweetalert";
 
-function EmployeeList() {
+function EmployeeList({setAllEmployees}) {
   //Use state for storing employee data
-  const [employees, setEmployees] = useState([ ]);
-  console.log(employees)
+  const [employees, setEmployees] = useState([]);
+
+//  useEffect(()=>{
+//   console.log("employee ", employees)
+//  },[employees])
 
   //use Effect to load data from local  storage
   useEffect(() => {
@@ -16,6 +21,7 @@ function EmployeeList() {
     console.log(storedEmployees)
     if (storedEmployees) {
       setEmployees(storedEmployees);
+      setAllEmployees(storedEmployees)
     }
     //Load data from local storage
   }, []);
@@ -25,24 +31,31 @@ function EmployeeList() {
   const deleteEmployee = (id) => {
     console.log("Delete employee btn clicked ");
     const updatedEmployees = employees.filter(
-      (employee) => employee.id !== id
+      (employee) => employee.id !==id
     );
     setEmployees(updatedEmployees);
     saveDataToLocalStorage("Employees", updatedEmployees);
     //Delete employee from local storage
+    swal("Employee succefully deleted" , id)
   };
 
   return (
-    <div>
+    <div className="container">
       <h2> Employee List  </h2>
 
-      <ol>
+      <ol style={{padding:0,textAlign: "justify" }}>
       {employees.map((employee) => (
-        <li key={employee.id}>
-          Employee Name :{employee.name} 
-          Position : {employee.employeePosition}{" "}
+        <li key={employee.id} className="employee-item">
+          <div className='displaybox' >
+          <span className="employee-name"> Employee Name :{" "}{employee.name} </span><br/>
+          <span className="employee-name"> Employee Name :{" "}{employee.surname} </span><br/>
+          <span className="employee-position"> Position :{" "} {employee.employeePosition}</span>
       
-          <button onClick={() => deleteEmployee(employee.id)}>Delete</button>
+          <button className="deletebtn" onClick={() => deleteEmployee(employee.id)}>Delete</button>
+
+
+          </div>
+         
         </li>
 
         ))}
