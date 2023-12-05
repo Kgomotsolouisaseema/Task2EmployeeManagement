@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import "../styles/EmployeeSearch.css";
 import swal from "sweetalert";
 
-function EmployeeSeach({ employees }) {
+function EmployeeSeach({ employees , idNumber}) {
   console.log("employees", employees);
 
   const [searchQuery, setSearchQuery] = useState("");
@@ -13,8 +13,11 @@ function EmployeeSeach({ employees }) {
   const [updatedSurname, setUpdatedSurname] = useState("");
   const [updatedPosition, setUpdatedPosition] = useState("");
   const [isEditing, setisEditing] = useState(false);
-  const [editedEmployee, setEditedEmployee] = useState({});
-  const [updatedEmployee, setUpdatedEmployee] = useState({});
+  const [editedEmployee, setEditedEmployee] = useState([]);
+  console.log("update employees" , editedEmployee)
+  
+  const [updatedEmployee, setUpdatedEmployee] = useState([]);
+  console.log("update employees" , updatedEmployee)
 
 
   useEffect(() => {
@@ -23,18 +26,14 @@ function EmployeeSeach({ employees }) {
   }, [employees]);
 
   const handleSearch = () => {
-    //Does employees have data it in before we filter by id
-    // if (!Array.isArray(employees)){
-    //   return;
-    // }
     const filteredEmployees = employees.filter((employees) =>
       employees.idNumber.includes(searchQuery)
     );
-    // onSearch && onSearch(filteredEmployees);
     setSelectedEmployee(filteredEmployees);
   };
 
-  //handle employee search
+
+  //handle employee select
   const handleEmployeeSelect = (employee) => {
     console.log("handle employee select btn clicked ");
     setSelectedEmployee(employee);
@@ -42,48 +41,86 @@ function EmployeeSeach({ employees }) {
     setisEditing(true); //open edit input
   };
 
-  const handleUpdate = async (id, employees) => {
+  // const handleUpdate = async (id, employees) => {
     
+  //   try {
+  //     let people = localStorage.getItem("Employees");
+  //     console.log("update btn clicked");
+  //     //get existing items from local storage first
+
+  //     //parse the current data or initialize a new array
+  //     people = people ? JSON.parse(people) : [];
+
+  //     // Create an object for the updated employee
+  //     let  updatedEmployee = {
+  //       id: id, 
+  //       name: updatedName, 
+  //       surname: updatedSurname, 
+  //       employeePosition: updatedPosition, 
+       
+  //     };
+
+  //     //find the item by ID AND UPDATE IT
+  //     const updatedPeople = people.map((person) => {
+  //       if (person.id === id) {
+  //         // return { ...person, ...updatedEmployee };
+  //         const updatedPerson = {...person , ...employees}
+  //         setUpdatedEmployee(updatedPerson)
+  //         return updatedPerson;
+  //       }
+  //       return person;
+  //     });
+  //     // update the local storage with the modified data
+  //     localStorage.setItem("Employees", JSON.stringify(updatedPeople));
+  //   } catch (error) {
+  //     console.error("Error updating employee", error);
+  //     swal("Error Updating Employee");
+  //   }
+  // };
+
+  
+
+  const handleUpdate = async (id) => {
     try {
       let people = localStorage.getItem("Employees");
       console.log("update btn clicked");
-      //get existing items from local storage first
-
-      //parse the current data or initialize a new array
+  
+      // Get existing items from local storage first
       people = people ? JSON.parse(people) : [];
-
-      // Create an object for the updated employee
-      let  updatedEmployee = {
-        id: id, 
-        name: updatedName, 
-        surname: updatedSurname, 
-        employeePosition: updatedPosition, 
-       
-      };
-
-      //find the item by ID AND UPDATE IT
-      const updatedPeople = people.map((person) => {
-        if (person.id === id) {
-          // return { ...person, ...updatedEmployee };
-          const updatedPerson = {...person , ...employees}
-          setUpdatedEmployee(updatedPerson)
-          return updatedPerson;
-        }
-        return person;
-      });
-      // update the local storage with the modified data
-      localStorage.setItem("Employees", JSON.stringify(updatedPeople));
+  
+      // Find the index of the employee in the array
+      const index = people.findIndex((person) => person.id === id);
+  
+      if (index !== -1) {
+        // Update the employee if found
+        people[index] = {
+          ...people[index],
+          name: updatedName,
+          surname: updatedSurname,
+          employeePosition: updatedPosition,
+        };
+  
+        // Update local storage with the modified data
+        localStorage.setItem("Employees", JSON.stringify(people));
+        setUpdatedEmployee(setEditedEmployee)
+        swal("EMPLOYEE UPDATED SUCCESSFULLY ");
+      } else {
+        console.error("Employee not found");
+        swal("Employee not found");
+      }
     } catch (error) {
       console.error("Error updating employee", error);
-      swal("Error Updating Employee");
+      swal("Error updating employee");
     }
   };
+   
 
-  //handle input field change
-  const handleInputChange = () => {
-    console.log("handle input change btn clicked");
-  };
 
+  //try 3 update 
+ 
+ 
+ 
+  
   return (
     <div className="container">
       <h2> Employee Search </h2>
@@ -164,7 +201,7 @@ function EmployeeSeach({ employees }) {
           />
 
           <button onClick={() => handleUpdate(selectedEmployee.id , updatedEmployee )}>
-            UPDATE
+            UPDATE EMPLOYEE
           </button>
         </div>
       )}

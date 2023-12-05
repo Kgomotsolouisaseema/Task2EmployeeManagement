@@ -146,6 +146,7 @@ function EmployeeForm({ onUpdate }) {
 
   return (
     <div className="container">
+        <h1> EMPLOYEE TRACKER APPLICATION :</h1>
       <form onSubmit={handleSubmit}>
         <label htmlFor="image" className="image-upload">
           <img
@@ -158,7 +159,7 @@ function EmployeeForm({ onUpdate }) {
             id="img"
             name="img"
             accept="image/*" //field to only accept images
-            // required
+            required
             // value={image}
             ref={fileInputRef} //reference to the file input
             style={{ display: "none" }}

@@ -37,6 +37,7 @@
     width: 150px;
     height: 150px;
     border-radius: 50%;
+    border-style: solid;
     overflow: hidden;
     display: inline-block;
   }

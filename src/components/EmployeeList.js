@@ -18,7 +18,7 @@ function EmployeeList({setAllEmployees}) {
   //use Effect to load data from local  storage
   useEffect(() => {
     const storedEmployees = getDataFromLocalStorage("Employees");
-    console.log(storedEmployees)
+     
     if (storedEmployees) {
       setEmployees(storedEmployees);
       setAllEmployees(storedEmployees)
@@ -48,8 +48,10 @@ function EmployeeList({setAllEmployees}) {
         <li key={employee.id} className="employee-item">
           <div className='displaybox' >
           <span className="employee-name"> Employee Name :{" "}{employee.name} </span><br/>
-          <span className="employee-name"> Employee Name :{" "}{employee.surname} </span><br/>
+          <span className="employee-name"> Employee Surname :{" "}{employee.surname} </span><br/>
+          <span className="employee-position"> ID Number  :{" "} {employee.idNumber}</span><br/>
           <span className="employee-position"> Position :{" "} {employee.employeePosition}</span>
+      
       
           <button className="deletebtn" onClick={() => deleteEmployee(employee.id)}>Delete</button>
 
