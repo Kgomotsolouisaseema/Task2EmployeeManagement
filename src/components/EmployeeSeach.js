@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import "../styles/EmployeeSearch.css";
 import swal from "sweetalert";
 
-function EmployeeSeach({ employees , idNumber}) {
+function EmployeeSeach({ employees }) {
   console.log("employees", employees);
 
   const [searchQuery, setSearchQuery] = useState("");
@@ -17,7 +17,7 @@ function EmployeeSeach({ employees , idNumber}) {
   console.log("update employees" , editedEmployee)
   
   const [updatedEmployee, setUpdatedEmployee] = useState([]);
-  console.log("update employees" , updatedEmployee)
+  // console.log("update employees" , updatedEmployee)
 
 
   useEffect(() => {
@@ -41,85 +41,44 @@ function EmployeeSeach({ employees , idNumber}) {
     setisEditing(true); //open edit input
   };
 
-  // const handleUpdate = async (id, employees) => {
+  const handleUpdate = async (id, employees) => {
     
-  //   try {
-  //     let people = localStorage.getItem("Employees");
-  //     console.log("update btn clicked");
-  //     //get existing items from local storage first
-
-  //     //parse the current data or initialize a new array
-  //     people = people ? JSON.parse(people) : [];
-
-  //     // Create an object for the updated employee
-  //     let  updatedEmployee = {
-  //       id: id, 
-  //       name: updatedName, 
-  //       surname: updatedSurname, 
-  //       employeePosition: updatedPosition, 
-       
-  //     };
-
-  //     //find the item by ID AND UPDATE IT
-  //     const updatedPeople = people.map((person) => {
-  //       if (person.id === id) {
-  //         // return { ...person, ...updatedEmployee };
-  //         const updatedPerson = {...person , ...employees}
-  //         setUpdatedEmployee(updatedPerson)
-  //         return updatedPerson;
-  //       }
-  //       return person;
-  //     });
-  //     // update the local storage with the modified data
-  //     localStorage.setItem("Employees", JSON.stringify(updatedPeople));
-  //   } catch (error) {
-  //     console.error("Error updating employee", error);
-  //     swal("Error Updating Employee");
-  //   }
-  // };
-
-  
-
-  const handleUpdate = async (id) => {
     try {
       let people = localStorage.getItem("Employees");
       console.log("update btn clicked");
-  
-      // Get existing items from local storage first
+      //get existing items from local storage first
+
+      //parse the current data or initialize a new array
       people = people ? JSON.parse(people) : [];
-  
-      // Find the index of the employee in the array
-      const index = people.findIndex((person) => person.id === id);
-  
-      if (index !== -1) {
-        // Update the employee if found
-        people[index] = {
-          ...people[index],
-          name: updatedName,
-          surname: updatedSurname,
-          employeePosition: updatedPosition,
-        };
-  
-        // Update local storage with the modified data
-        localStorage.setItem("Employees", JSON.stringify(people));
-        setUpdatedEmployee(setEditedEmployee)
-        swal("EMPLOYEE UPDATED SUCCESSFULLY ");
-      } else {
-        console.error("Employee not found");
-        swal("Employee not found");
-      }
+
+      // Create an object for the updated employee
+      let  updatedEmployee = {
+        id: id, 
+        name: updatedName, 
+        surname: updatedSurname, 
+        employeePosition: updatedPosition, 
+       
+      };
+
+      //find the item by ID AND UPDATE IT
+      const updatedPeople = people.map((person) => {
+        if (person.id === id) {
+          // return { ...person, ...updatedEmployee };
+          const updatedPerson = {...person , ...employees}
+          setUpdatedEmployee(updatedPerson)
+          return updatedPerson;
+        }
+        return person;
+      });
+      // update the local storage with the modified data
+      localStorage.setItem("Employees", JSON.stringify(updatedPeople));
     } catch (error) {
       console.error("Error updating employee", error);
-      swal("Error updating employee");
+      swal("Error Updating Employee");
     }
   };
-   
 
 
-  //try 3 update 
- 
- 
- 
   
   return (
     <div className="container">

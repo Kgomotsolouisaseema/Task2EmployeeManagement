@@ -24,7 +24,7 @@ function App() {
 
   return (
     <div className="App">
-     <EmployeeForm onUpdate={handleUpdate}/>
+     {/* <EmployeeForm onUpdate={handleUpdate}/> */}
      <EmployeeList setAllEmployees={setAllEmployees}/>
      <EmployeeSearch employees={allEmployees} onSearch={handleSearch} />
     
