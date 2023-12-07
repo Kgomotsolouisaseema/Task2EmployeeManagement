@@ -52,7 +52,7 @@ function EmployeeList({setAllEmployees}) {
           <span className="employee-position"> ID Number  :{" "} {employee.idNumber}</span><br/>
           <span className="employee-position"> Position :{" "} {employee.employeePosition}</span>
       
-          <button className="deletebtn" onClick={() => deleteEmployee(employee.id)}>Delete</button>
+          <button className="deletebtn" onClick={() => deleteEmployee(employee.name)}>Delete</button>
 
 
           </div>

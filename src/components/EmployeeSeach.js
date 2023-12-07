@@ -41,8 +41,7 @@ function EmployeeSeach({ employees }) {
     setisEditing(true); //open edit input
   };
 
-  const handleUpdate = async (id, employees) => {
-    
+  const handleUpdate1 = async (id) => { 
     try {
       let people = localStorage.getItem("Employees");
       console.log("update btn clicked");
@@ -79,6 +78,41 @@ function EmployeeSeach({ employees }) {
   };
 
 
+//HANDLE UPDATE FUNCTION 
+  const handleUpdate = async (id, updatedName, updatedSurname, updatedPosition) => {
+    let people = localStorage.getItem("Employees");
+    try {
+     
+      console.log("update btn clicked");
+  
+      // Get existing items from local storage first
+      people = people ? JSON.parse(people) : [];
+  
+      // Find the index of the employee in the array
+      const index = people.findIndex((person) => person.id === id);
+  
+      if (index !== -1) {
+        // Update the employee if found
+        people[index] = {
+          ...people[index.id],
+          name: updatedName,
+          surname: updatedSurname,
+          employeePosition: updatedPosition,
+        };
+  
+        // Update local storage with the modified data
+        localStorage.setItem("Employees", JSON.stringify(people));
+        setUpdatedEmployee(setEditedEmployee)
+        swal("EMPLOYEE UPDATED SUCCESSFULLY ");
+      } else {
+        console.error("Employee not found");
+        swal("Employee not found");
+      }
+    } catch (error) {
+      console.error("Error updating employee", error);
+      swal("Error updating employee");
+    }
+  };
   
   return (
     <div className="container">
